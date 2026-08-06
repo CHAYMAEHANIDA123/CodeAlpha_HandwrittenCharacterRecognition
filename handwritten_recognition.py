@@ -43,25 +43,24 @@ test_loss, test_acc = model.evaluate(x_test, y_test, verbose=2)
 print(f"✅ Accuracy sur le test set : {test_acc * 100:.2f}%")
 
 # 7. VISUALISATION DES RÉSULTATS
-# Courbe de précision (Accuracy)
-plt.figure(figsize=(12, 5))
+plt.figure(figsize=(15, 4))
 
-plt.subplot(1, 2, 1)
-plt.plot(history.history['accuracy'], label='Train Accuracy')
-plt.plot(history.history['val_accuracy'], label='Test Accuracy')
-plt.title('Précision du Modèle (Accuracy)')
-plt.xlabel('Epochs')
-plt.ylabel('Accuracy')
-plt.legend()
+# Courbe de précision (Accuracy) — occupe les 2 premières colonnes d'une grille à 7 colonnes
+ax_acc = plt.subplot2grid((1, 7), (0, 0), colspan=2)
+ax_acc.plot(history.history['accuracy'], label='Train Accuracy')
+ax_acc.plot(history.history['val_accuracy'], label='Test Accuracy')
+ax_acc.set_title('Précision du Modèle (Accuracy)')
+ax_acc.set_xlabel('Epochs')
+ax_acc.set_ylabel('Accuracy')
+ax_acc.legend()
 
-# Afficher quelques prédictions
-plt.subplot(1, 2, 2)
+# Afficher quelques prédictions — chacune dans sa propre colonne (colonnes 2 à 6)
 predictions = model.predict(x_test[:5])
 for i in range(5):
-    plt.subplot(1, 5, i+1)
-    plt.imshow(x_test[i].reshape(28, 28), cmap='gray')
-    plt.title(f"Pred: {np.argmax(predictions[i])}\nTrue: {y_test[i]}")
-    plt.axis('off')
+    ax_img = plt.subplot2grid((1, 7), (0, 2 + i))
+    ax_img.imshow(x_test[i].reshape(28, 28), cmap='gray')
+    ax_img.set_title(f"Pred: {np.argmax(predictions[i])}\nTrue: {y_test[i]}")
+    ax_img.axis('off')
 
 plt.tight_layout()
 plt.savefig('mnist_predictions.png') # Sauvegarde de l'image pour LinkedIn
